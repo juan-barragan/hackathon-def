@@ -9,7 +9,7 @@ from sklearn.datasets import fetch_openml
 from sklearn.pipeline import Pipeline
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
-from sklearn.feature_selection import SelectPercentile, chi2
+from sklearn.preprocessing import OrdinalEncoder
 
 
 def load_accidents(file_name):
@@ -61,10 +61,18 @@ def get_proppreprocess_date(
             ("encoder", OneHotEncoder(handle_unknown="ignore")),
         ]
     )
+
+    ordinal_transformer = Pipeline(
+        steps=[
+            ("encoder", OrdinalEncoder()),
+        ]
+    )
+
     preprocessor = ColumnTransformer(
         transformers=[
             ("num", numeric_transformer, numeric_features),
             ("cat", categorical_transformer, categorical_features),
+            ("ord", ordinal_transformer, ordinal_features),
         ]
     )
     return preprocessor
