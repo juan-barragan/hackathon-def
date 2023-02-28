@@ -3,11 +3,17 @@ import pandas as pd
 import streamlit as st
 import numpy as np
 
-arr = np.random.normal(1, 1, size=100)
+def load_accidents(file_name):
+    data = pd.read_csv(file_name, dtype = {'lon': float, 'lat':float})
+    data = data.dropna(subset=['lon', 'lat'])
+    data = data[ (data['lon'] != 0) & (data['lat'] != 0) ]
+    return data
 
 st.title("Velo hacks")
 
-df = pd.read_csv("accidents-velos.csv")
+file_name = 'accidents-velos.csv'
+
+accidents = load_accidents(file_name)
+st.map(accidents)
 
 
-st.dataframe(data=df.head(10))
